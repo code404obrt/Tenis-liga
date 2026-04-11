@@ -2,12 +2,15 @@ import { Link } from "react-router-dom";
 import Card from "../components/Common/Card";
 import Button from "../components/Common/Button";
 import LeaderboardPreview from "../components/Leaderboard/LeaderboardPreview";
+import PendingConfirmationCard from "../components/Match/PendingConfirmationCard";
 import { useAuthStore } from "../store/authStore";
 import { usePlayers } from "../hooks/usePlayers";
+import { usePendingMatches } from "../hooks/usePendingMatches";
 
 export default function Home() {
   const player = useAuthStore((s) => s.player);
   const { players } = usePlayers();
+  const { matches: pendingMatches, refetch } = usePendingMatches(player?.id);
 
   // Rank = position in players list sorted by ELO (1-based)
   const rank = players.length
@@ -33,6 +36,11 @@ export default function Home() {
       <Link to="/match/new" className="block">
         <Button size="lg">Add match result</Button>
       </Link>
+
+      {/* Pending confirmation cards */}
+      {pendingMatches.map((match) => (
+        <PendingConfirmationCard key={match.id} match={match} onAction={refetch} />
+      ))}
 
       {/* Leaderboard preview */}
       <LeaderboardPreview players={players} currentPlayerId={player?.id} />
