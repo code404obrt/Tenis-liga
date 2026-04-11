@@ -56,15 +56,24 @@ All tables have RLS enabled. Admin policies use `public.is_admin()` SECURITY DEF
 - [x] Authentication (login/logout, protected routes, player row fetch)
 - [x] Home screen with real data (hero card, leaderboard preview)
 - [x] App shell (Header, Sidebar, Navigation)
+- [x] New Match form — scoreboard with progressive set unlocking, tiebreak input, surface/date/location, validation with error feedback, submit to Supabase
 
 ### In Progress / Next
-- [ ] New Match form (scoreboard entry, validation, submit)
-- [ ] Match confirmation flow (pending card, confirm/reject)
-- [ ] Email notifications
-- [ ] ELO + points Edge Function
+- [ ] Match confirmation flow (pending card on home, confirm/reject by opponent)
+- [ ] Email notifications (on submit, on reject, on confirm)
+- [ ] ELO + points Edge Function (runs server-side on match confirm)
 - [ ] Leaderboard page (full, with season selector)
 - [ ] Player profile page
 - [ ] Admin panel (create players, manage seasons, override matches)
+
+## Match Submission Notes
+
+- `sets` stored as JSONB: only filled sets included (2 or 3 entries)
+- `player_a_id` = submitter, `player_b_id` = opponent
+- `season_id` required — match submit button disabled if no active season
+- Valid set scores: 6-0 to 6-4, 7-5, 7-6 (tiebreak). 6-5 is invalid.
+- `sets_won_a` / `sets_won_b` computed on frontend from validation, stored on submit
+- Status starts as `pending`, moves to `confirmed` or `disputed` via opponent action
 
 ## Running the App
 
