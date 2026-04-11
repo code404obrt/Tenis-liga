@@ -16,3 +16,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+@keyframes flash-win {
+  0%   { box-shadow: 0 0 0 3px rgba(99, 153, 34, 0.7); background-color: rgba(99, 153, 34, 0.15); }
+  100% { box-shadow: 0 0 0 0px rgba(99, 153, 34, 0); background-color: transparent; }
+}
+
+@keyframes flash-loss {
+  0%   { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5); background-color: rgba(220, 38, 38, 0.08); }
+  100% { box-shadow: 0 0 0 0px rgba(220, 38, 38, 0); background-color: transparent; }
+}
+
+.flash-win  { animation: flash-win  1.2s ease-out forwards; }
+.flash-loss { animation: flash-loss 1.2s ease-out forwards; }

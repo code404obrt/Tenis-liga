@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Card from "../Common/Card";
 import RankRow from "./RankRow";
 
-export default function LeaderboardPreview({ players = [], currentPlayerId }) {
+export default function LeaderboardPreview({ players = [], currentPlayerId, eloChanges = {} }) {
   const top5 = players.slice(0, 5);
   const currentPlayerRank = players.findIndex((p) => p.id === currentPlayerId) + 1;
   const currentPlayerInTop5 = currentPlayerRank > 0 && currentPlayerRank <= 5;
@@ -29,6 +29,7 @@ export default function LeaderboardPreview({ players = [], currentPlayerId }) {
               elo={p.elo}
               points={p.points ?? 0}
               highlight={p.id === currentPlayerId}
+              flash={eloChanges[p.id]}
             />
           ))}
 
@@ -42,6 +43,7 @@ export default function LeaderboardPreview({ players = [], currentPlayerId }) {
                 elo={currentPlayer.elo}
                 points={currentPlayer.points ?? 0}
                 highlight
+                flash={eloChanges[currentPlayer.id]}
               />
             </>
           )}

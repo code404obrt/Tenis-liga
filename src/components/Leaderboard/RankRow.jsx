@@ -9,12 +9,14 @@ function initials(name = "") {
     .join("");
 }
 
-export default function RankRow({ rank, player, elo, points, delta, highlight }) {
+export default function RankRow({ rank, player, elo, points, delta, highlight, flash }) {
   return (
     <div
       className={clsx(
-        "flex items-center gap-3 px-3 py-2 rounded-lg",
-        highlight && "bg-tennis-light/15 border border-tennis-light"
+        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
+        highlight && "bg-tennis-light/15 border border-tennis-light",
+        flash === "win" && "flash-win",
+        flash === "loss" && "flash-loss"
       )}
     >
       <span className="w-6 text-sm font-semibold text-tennis-dark">{rank}</span>
