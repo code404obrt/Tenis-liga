@@ -62,10 +62,10 @@ All tables have RLS enabled. Admin policies use `public.is_admin()` SECURITY DEF
 - [x] Match confirmation flow — pending card on home, confirm/reject by opponent
 - [x] ELO Edge Function — recalculates ELO and season_stats on match confirm via DB webhook
 - [x] Live leaderboard refresh after confirmation with win/loss flash animations
+- [x] Full leaderboard page — rank, ELO, pts, W, L, win%, streak, season selector
+- [x] Player profile page — hero stats, head-to-head selector, full match history with W/L pill
 
 ### In Progress / Next
-- [ ] Leaderboard page (full table, season selector, W/L/win%/streak columns)
-- [ ] Player profile page
 - [ ] Email notifications (on submit, on reject, on confirm)
 - [ ] Admin panel (create players, manage seasons, override matches)
 
