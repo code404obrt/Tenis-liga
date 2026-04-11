@@ -1,27 +1,52 @@
+import { Link } from "react-router-dom";
 import Card from "../Common/Card";
 import RankRow from "./RankRow";
 
-// TODO: Fetch top 5 + always-include logged-in player.
-// For now a static placeholder.
-export default function LeaderboardPreview() {
+export default function LeaderboardPreview({ players = [], currentPlayerId }) {
+  const top5 = players.slice(0, 5);
+  const currentPlayerRank = players.findIndex((p) => p.id === currentPlayerId) + 1;
+  const currentPlayerInTop5 = currentPlayerRank > 0 && currentPlayerRank <= 5;
+  const currentPlayer = players.find((p) => p.id === currentPlayerId);
+
   return (
     <Card>
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-semibold text-tennis-dark">Leaderboard</h2>
-        <a href="/leaderboard" className="text-xs text-tennis-light">See all</a>
+        <Link to="/leaderboard" className="text-xs text-tennis-light">
+          See all
+        </Link>
       </div>
-      <div className="space-y-1">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <RankRow
-            key={i}
-            rank={i}
-            player={{ name: `Player ${i}` }}
-            elo={1200}
-            points={0}
-            delta={0}
-          />
-        ))}
-      </div>
+
+      {players.length === 0 ? (
+        <p className="text-sm text-gray-400">No players yet</p>
+      ) : (
+        <div className="space-y-1">
+          {top5.map((p, i) => (
+            <RankRow
+              key={p.id}
+              rank={i + 1}
+              player={p}
+              elo={p.elo}
+              points={p.points ?? 0}
+              highlight={p.id === currentPlayerId}
+            />
+          ))}
+
+          {/* Always show logged-in player if outside top 5 */}
+          {currentPlayer && !currentPlayerInTop5 && (
+            <>
+              <div className="border-t border-dashed border-gray-200 my-1" />
+              <RankRow
+                rank={currentPlayerRank}
+                player={currentPlayer}
+                elo={currentPlayer.elo}
+                points={currentPlayer.points ?? 0}
+                highlight
+              />
+            </>
+          )}
+        </div>
+      )}
     </Card>
   );
 }
