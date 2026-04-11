@@ -44,8 +44,10 @@ All tables have RLS enabled. Admin policies use `public.is_admin()` SECURITY DEF
 
 - `season_stats` and ELO are updated server-side only (Edge Function on match confirm) — never on frontend
 - Pending matches excluded from all stats and leaderboard
-- `usePlayers()` hook fetches players ordered by ELO descending — used for rank calculation and leaderboard
+- `usePlayers()` hook fetches players ordered by ELO descending, merges season_stats (wins, losses, points) — used for rank calculation and leaderboard
 - Admin panel planned but not yet built — player creation is manual for now
+- ELO flash animations: green pulse for winner, red for loser in leaderboard after confirmation (1.2s fade out)
+- Leaderboard refetches 500ms after confirmation to allow Edge Function time to update ELO
 
 ## Current Progress
 
@@ -54,16 +56,17 @@ All tables have RLS enabled. Admin policies use `public.is_admin()` SECURITY DEF
 - [x] Tailwind with tennis green theme
 - [x] Supabase project + schema migrations (5 tables + RLS)
 - [x] Authentication (login/logout, protected routes, player row fetch)
-- [x] Home screen with real data (hero card, leaderboard preview)
-- [x] App shell (Header, Sidebar, Navigation)
+- [x] Home screen with real data (hero card, leaderboard preview with points)
+- [x] App shell (Header with sign out, Sidebar, Navigation)
 - [x] New Match form — scoreboard with progressive set unlocking, tiebreak input, surface/date/location, validation with error feedback, submit to Supabase
+- [x] Match confirmation flow — pending card on home, confirm/reject by opponent
+- [x] ELO Edge Function — recalculates ELO and season_stats on match confirm via DB webhook
+- [x] Live leaderboard refresh after confirmation with win/loss flash animations
 
 ### In Progress / Next
-- [ ] Match confirmation flow (pending card on home, confirm/reject by opponent)
-- [ ] Email notifications (on submit, on reject, on confirm)
-- [ ] ELO + points Edge Function (runs server-side on match confirm)
-- [ ] Leaderboard page (full, with season selector)
+- [ ] Leaderboard page (full table, season selector, W/L/win%/streak columns)
 - [ ] Player profile page
+- [ ] Email notifications (on submit, on reject, on confirm)
 - [ ] Admin panel (create players, manage seasons, override matches)
 
 ## Match Submission Notes
