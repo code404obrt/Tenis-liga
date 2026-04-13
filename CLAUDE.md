@@ -45,7 +45,7 @@ All tables have RLS enabled. Admin policies use `public.is_admin()` SECURITY DEF
 - `season_stats` and ELO are updated server-side only (Edge Function on match confirm) — never on frontend
 - Pending matches excluded from all stats and leaderboard
 - `usePlayers()` hook fetches players ordered by ELO descending, merges season_stats (wins, losses, points) — used for rank calculation and leaderboard
-- Admin panel planned but not yet built — player creation is manual for now
+- Admin panel: create players (via Edge Function), manage seasons, void/delete matches, activate/deactivate players
 - ELO flash animations: green pulse for winner, red for loser in leaderboard after confirmation (1.2s fade out)
 - Leaderboard refetches 500ms after confirmation to allow Edge Function time to update ELO
 
@@ -66,8 +66,10 @@ All tables have RLS enabled. Admin policies use `public.is_admin()` SECURITY DEF
 - [x] Player profile page — hero stats, head-to-head selector, full match history with W/L pill
 
 ### In Progress / Next
-- [ ] Email notifications (on submit, on reject, on confirm)
-- [ ] Admin panel (create players, manage seasons, override matches)
+- [ ] Email notifications (on submit, on reject, on confirm) — see `docs/email-notifications-plan.md`
+
+### Done (continued)
+- [x] Admin panel — create players (Edge Function), manage seasons, void/delete matches, activate/deactivate players
 
 ## Match Submission Notes
 
