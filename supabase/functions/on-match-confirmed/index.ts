@@ -58,26 +58,21 @@ Deno.serve(async (req) => {
       supabase.from("players").update({ elo: newEloB }).eq("id", playerBId),
     ]);
 
-    // Upsert season_stats for both players
-    await supabase.from("season_stats").upsert(
-      [
-        {
-          season_id: seasonId,
-          player_id: playerAId,
-          wins: winnerIsA ? 1 : 0,
-          losses: winnerIsA ? 0 : 1,
-          points: winnerIsA ? 3 : 0,
-        },
-        {
-          season_id: seasonId,
-          player_id: playerBId,
-          wins: winnerIsA ? 0 : 1,
-          losses: winnerIsA ? 1 : 0,
-          points: winnerIsA ? 0 : 3,
-        },
-      ],
-      { onConflict: "season_id,player_id" }
-    );
+    // Upsert season_stats with INCREMENT (not overwrite)
+    await supabase.rpc("upsert_season_stats", {
+      p_season_id: seasonId,
+      p_player_id: playerAId,
+      p_wins: winnerIsA ? 1 : 0,
+      p_losses: winnerIsA ? 0 : 1,
+      p_points: winnerIsA ? 3 : 0,
+    });
+    await supabase.rpc("upsert_season_stats", {
+      p_season_id: seasonId,
+      p_player_id: playerBId,
+      p_wins: winnerIsA ? 0 : 1,
+      p_losses: winnerIsA ? 1 : 0,
+      p_points: winnerIsA ? 0 : 3,
+    });
 
     return new Response(
       JSON.stringify({ ok: true, eloA: newEloA, eloB: newEloB }),

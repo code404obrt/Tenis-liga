@@ -1,20 +1,48 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Card from "../components/Common/Card";
 import Button from "../components/Common/Button";
 import LeaderboardPreview from "../components/Leaderboard/LeaderboardPreview";
 import PendingConfirmationCard from "../components/Match/PendingConfirmationCard";
+import MatchCard from "../components/Match/MatchCard";
 import { useAuthStore } from "../store/authStore";
 import { usePlayers } from "../hooks/usePlayers";
 import { usePendingMatches } from "../hooks/usePendingMatches";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const player = useAuthStore((s) => s.player);
   const { players, refetch: refetchPlayers } = usePlayers();
   const { matches: pendingMatches, refetch: refetchPending } = usePendingMatches(player?.id);
   const [eloChanges, setEloChanges] = useState({});
+  const [myLastMatch, setMyLastMatch] = useState(null);
+  const [recentMatches, setRecentMatches] = useState([]);
   const playersRef = useRef(players);
   playersRef.current = players;
+
+  const fetchHomeMatches = useCallback(async () => {
+    if (!player?.id) return;
+    // My last confirmed match
+    const { data: myMatches } = await supabase
+      .from("matches")
+      .select("*, player_a:player_a_id(id, name), player_b:player_b_id(id, name)")
+      .or(`player_a_id.eq.${player.id},player_b_id.eq.${player.id}`)
+      .eq("status", "confirmed")
+      .order("played_at", { ascending: false })
+      .limit(1);
+    setMyLastMatch(myMatches?.[0] ?? null);
+
+    // Recent confirmed matches (all players)
+    const { data: recent } = await supabase
+      .from("matches")
+      .select("*, player_a:player_a_id(id, name), player_b:player_b_id(id, name)")
+      .eq("status", "confirmed")
+      .order("played_at", { ascending: false })
+      .limit(5);
+    setRecentMatches(recent ?? []);
+  }, [player?.id]);
+
+  useEffect(() => { fetchHomeMatches(); }, [fetchHomeMatches]);
 
   function onMatchAction() {
     refetchPending();
@@ -23,6 +51,7 @@ export default function Home() {
     // Wait for Edge Function to update ELO, then refetch
     setTimeout(() => {
       refetchPlayers();
+      fetchHomeMatches();
       // After state updates, compare new ELO vs snapshot
       setTimeout(() => {
         const changes = {};
@@ -76,13 +105,23 @@ export default function Home() {
       {/* My last match */}
       <Card>
         <h3 className="font-semibold text-tennis-dark mb-2">My last match</h3>
-        <p className="text-sm text-gray-400">No matches yet</p>
+        {myLastMatch ? (
+          <MatchCard match={myLastMatch} playerId={player?.id} />
+        ) : (
+          <p className="text-sm text-gray-400">No matches yet</p>
+        )}
       </Card>
 
       {/* Recent matches feed */}
       <Card>
         <h3 className="font-semibold text-tennis-dark mb-2">Recent matches</h3>
-        <p className="text-sm text-gray-400">No matches yet</p>
+        {recentMatches.length > 0 ? (
+          recentMatches.map((m) => (
+            <MatchCard key={m.id} match={m} playerId={player?.id} />
+          ))
+        ) : (
+          <p className="text-sm text-gray-400">No matches yet</p>
+        )}
       </Card>
     </div>
   );

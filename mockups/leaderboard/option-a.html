@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0" />
+  <title>Leaderboard — Option A</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F5F5F5;
+      padding: 16px;
+      max-width: 390px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #27500A;
+    }
+
+    select {
+      font-size: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 6px 10px;
+      background: white;
+      color: #27500A;
+      font-weight: 500;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    /* Column headers */
+    .table-head {
+      display: grid;
+      grid-template-columns: 28px 1fr 52px 56px;
+      padding: 8px 14px;
+      border-bottom: 1px solid #f3f4f6;
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .col-right { text-align: right; }
+
+    /* Row */
+    .row {
+      display: grid;
+      grid-template-columns: 28px 1fr 52px 56px;
+      align-items: center;
+      padding: 12px 14px;
+      border-bottom: 1px solid #f9fafb;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .row:last-child { border-bottom: none; }
+    .row:active { background: #f9fafb; }
+
+    .rank {
+      font-size: 15px;
+      font-weight: 700;
+      color: #27500A;
+    }
+
+    .player {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #27500A;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .player-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pts {
+      text-align: right;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .wl {
+      text-align: right;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .wl span.w { color: #639922; font-weight: 600; }
+    .wl span.l { color: #ef4444; font-weight: 600; }
+
+    /* Expanded detail panel */
+    .detail {
+      display: none;
+      grid-column: 1 / -1;
+      background: #f9fafb;
+      border-radius: 10px;
+      margin: 0 14px 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .detail-item strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .row-wrap {
+      border-bottom: 1px solid #f9fafb;
+    }
+    .row-wrap:last-child { border-bottom: none; }
+    .row-wrap .row { border-bottom: none; }
+
+    /* Show detail for "open" row — demo only */
+    .row-wrap.open .detail { display: block; }
+    .row-wrap.open .row { background: #f9fafb; }
+
+    .chevron {
+      font-size: 10px;
+      color: #d1d5db;
+      margin-left: 4px;
+      transition: transform 0.2s;
+    }
+    .row-wrap.open .chevron { transform: rotate(180deg); }
+
+    .streak-win  { color: #639922; font-weight: 700; }
+    .streak-loss { color: #ef4444; font-weight: 700; }
+
+    .note {
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h2>Leaderboard</h2>
+    <select>
+      <option>Spring 2026 (active)</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="table-head">
+      <span>#</span>
+      <span>Player</span>
+      <span class="col-right">Pts</span>
+      <span class="col-right">W – L</span>
+    </div>
+
+    <!-- Row 1 — open/expanded demo -->
+    <div class="row-wrap open" onclick="this.classList.toggle('open')">
+      <div class="row">
+        <span class="rank">1</span>
+        <div class="player">
+          <div class="avatar">D</div>
+          <span class="player-name">Damir<span class="chevron">▼</span></span>
+        </div>
+        <span class="pts">3</span>
+        <span class="wl"><span class="w">1</span> – <span class="l">0</span></span>
+      </div>
+      <div class="detail">
+        <div class="detail-grid">
+          <div class="detail-item"><strong>1216</strong>ELO</div>
+          <div class="detail-item"><strong>100%</strong>Win%</div>
+          <div class="detail-item"><strong class="streak-win">W1</strong>Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row-wrap" onclick="this.classList.toggle('open')">
+      <div class="row">
+        <span class="rank">2</span>
+        <div class="player">
+          <div class="avatar">J</div>
+          <span class="player-name">Josip<span class="chevron">▼</span></span>
+        </div>
+        <span class="pts">0</span>
+        <span class="wl"><span class="w">0</span> – <span class="l">0</span></span>
+      </div>
+      <div class="detail">
+        <div class="detail-grid">
+          <div class="detail-item"><strong>1200</strong>ELO</div>
+          <div class="detail-item"><strong>—</strong>Win%</div>
+          <div class="detail-item"><strong>—</strong>Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row-wrap" onclick="this.classList.toggle('open')">
+      <div class="row">
+        <span class="rank">3</span>
+        <div class="player">
+          <div class="avatar">N</div>
+          <span class="player-name">Nikola<span class="chevron">▼</span></span>
+        </div>
+        <span class="pts">0</span>
+        <span class="wl"><span class="w">0</span> – <span class="l">0</span></span>
+      </div>
+      <div class="detail">
+        <div class="detail-grid">
+          <div class="detail-item"><strong>1200</strong>ELO</div>
+          <div class="detail-item"><strong>—</strong>Win%</div>
+          <div class="detail-item"><strong>—</strong>Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="row-wrap" onclick="this.classList.toggle('open')">
+      <div class="row">
+        <span class="rank">4</span>
+        <div class="player">
+          <div class="avatar">S</div>
+          <span class="player-name">Stjepan<span class="chevron">▼</span></span>
+        </div>
+        <span class="pts">0</span>
+        <span class="wl"><span class="w">0</span> – <span class="l">1</span></span>
+      </div>
+      <div class="detail">
+        <div class="detail-grid">
+          <div class="detail-item"><strong>1184</strong>ELO</div>
+          <div class="detail-item"><strong>0%</strong>Win%</div>
+          <div class="detail-item"><strong class="streak-loss">L1</strong>Streak</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="note">Tap a row to expand ELO · Win% · Streak</p>
+
+</body>
+</html>
