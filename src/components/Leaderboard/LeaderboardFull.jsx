@@ -11,25 +11,20 @@ function initials(name = "") {
     .join("");
 }
 
-function StreakBadge({ streak }) {
-  if (!streak) return <span className="text-gray-300">—</span>;
-  const isWin = streak > 0;
-  return (
-    <span
-      className={clsx(
-        "text-xs font-semibold",
-        isWin ? "text-tennis-light" : "text-red-500"
-      )}
-    >
-      {isWin ? "W" : "L"}{Math.abs(streak)}
-    </span>
-  );
-}
-
 function WinPct({ wins, losses }) {
   const total = wins + losses;
   if (total === 0) return <span className="text-gray-300">—</span>;
-  return <span>{Math.round((wins / total) * 100)}%</span>;
+  return <>{Math.round((wins / total) * 100)}%</>;
+}
+
+function StreakLabel({ streak }) {
+  if (!streak) return <span className="text-gray-300">—</span>;
+  const isWin = streak > 0;
+  return (
+    <span className={isWin ? "text-tennis-light font-bold" : "text-red-500 font-bold"}>
+      {isWin ? "W" : "L"}{Math.abs(streak)}
+    </span>
+  );
 }
 
 export default function LeaderboardFull({ seasonId }) {
@@ -45,49 +40,45 @@ export default function LeaderboardFull({ seasonId }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100">
-      {/* Header */}
-      <div className="grid grid-cols-[2rem_1fr_3rem_3rem_2rem_2rem_3rem_3rem] gap-x-2 px-3 py-2 bg-gray-50 border-b border-gray-100 text-xs text-gray-400 font-medium">
-        <span>#</span>
-        <span>Player</span>
-        <span className="text-right">ELO</span>
-        <span className="text-right">Pts</span>
-        <span className="text-right">W</span>
-        <span className="text-right">L</span>
-        <span className="text-right">Win%</span>
-        <span className="text-right">Streak</span>
-      </div>
-
-      {/* Rows */}
+    <div className="bg-white rounded-2xl overflow-hidden">
       {rows.map((p, i) => {
         const isMe = p.id === player?.id;
+        const total = p.wins + p.losses;
         return (
           <div
             key={p.id}
             className={clsx(
-              "grid grid-cols-[2rem_1fr_3rem_3rem_2rem_2rem_3rem_3rem] gap-x-2 px-3 py-2.5 items-center border-b border-gray-50 last:border-0",
+              "flex items-center gap-2.5 px-3.5 py-3 border-b border-gray-100 last:border-0",
               isMe && "bg-tennis-light/10"
             )}
           >
-            <span className="text-sm font-semibold text-tennis-dark">{i + 1}</span>
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="w-7 h-7 shrink-0 rounded-full bg-tennis-dark text-white grid place-items-center text-xs">
-                {initials(p.name)}
-              </span>
-              <span className={clsx("text-sm truncate", isMe && "font-semibold text-tennis-dark")}>
+            {/* Rank */}
+            <span className="w-5 shrink-0 text-sm font-bold text-tennis-dark">{i + 1}</span>
+
+            {/* Avatar */}
+            <span className="w-8 h-8 shrink-0 rounded-full bg-tennis-dark text-white grid place-items-center text-xs font-semibold">
+              {initials(p.name)}
+            </span>
+
+            {/* Name + secondary stats */}
+            <div className="flex-1 min-w-0">
+              <p className={clsx("text-sm font-semibold truncate", isMe ? "text-tennis-dark" : "text-gray-900")}>
                 {p.name}
-              </span>
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5 whitespace-nowrap">
+                {p.elo} ELO &nbsp;·&nbsp;
+                <span className="text-tennis-light font-semibold">{p.wins}W</span>{" "}
+                <span className="text-red-400 font-semibold">{p.losses}L</span>
+                {total > 0 && <> &nbsp;·&nbsp; <WinPct wins={p.wins} losses={p.losses} /></>}
+                &nbsp;·&nbsp; <StreakLabel streak={p.streak} />
+              </p>
             </div>
-            <span className="text-xs text-gray-500 text-right">{p.elo}</span>
-            <span className="text-sm font-semibold text-right">{p.points}</span>
-            <span className="text-sm text-right text-tennis-light font-medium">{p.wins}</span>
-            <span className="text-sm text-right text-red-400 font-medium">{p.losses}</span>
-            <span className="text-xs text-right text-gray-600">
-              <WinPct wins={p.wins} losses={p.losses} />
-            </span>
-            <span className="text-right">
-              <StreakBadge streak={p.streak} />
-            </span>
+
+            {/* Points */}
+            <div className="shrink-0 text-right">
+              <span className="block text-lg font-extrabold text-gray-900">{p.points}</span>
+              <span className="block text-[10px] text-gray-400">pts</span>
+            </div>
           </div>
         );
       })}

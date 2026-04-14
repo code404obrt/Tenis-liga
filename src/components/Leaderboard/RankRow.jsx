@@ -9,33 +9,28 @@ function initials(name = "") {
     .join("");
 }
 
-export default function RankRow({ rank, player, elo, points, delta, highlight, flash }) {
+export default function RankRow({ rank, player, elo, points, highlight, flash }) {
   return (
     <div
       className={clsx(
-        "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
+        "flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-colors",
         highlight && "bg-tennis-light/15 border border-tennis-light",
         flash === "win" && "flash-win",
         flash === "loss" && "flash-loss"
       )}
     >
-      <span className="w-6 text-sm font-semibold text-tennis-dark">{rank}</span>
-      <span className="w-8 h-8 rounded-full bg-tennis-dark text-white grid place-items-center text-xs">
+      <span className="w-5 shrink-0 text-sm font-bold text-tennis-dark">{rank}</span>
+      <span className="w-8 h-8 shrink-0 rounded-full bg-tennis-dark text-white grid place-items-center text-xs font-semibold">
         {initials(player?.name)}
       </span>
-      <span className="flex-1 truncate text-sm">{player?.name ?? "—"}</span>
-      <span className="text-xs text-gray-500 w-12 text-right">{elo}</span>
-      <span className="text-sm font-semibold w-10 text-right">{points}</span>
-      {delta != null && (
-        <span
-          className={clsx(
-            "text-xs w-6 text-right",
-            delta > 0 ? "text-tennis-light" : delta < 0 ? "text-red-500" : "text-gray-400"
-          )}
-        >
-          {delta > 0 ? "▲" : delta < 0 ? "▼" : "–"}
-        </span>
-      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-gray-900 truncate">{player?.name ?? "—"}</p>
+        <p className="text-xs text-gray-400">{elo} ELO</p>
+      </div>
+      <div className="shrink-0 text-right">
+        <span className="block text-base font-extrabold text-gray-900">{points}</span>
+        <span className="block text-[10px] text-gray-400">pts</span>
+      </div>
     </div>
   );
 }
