@@ -18,7 +18,7 @@ export default function Home() {
   const [myLastMatch, setMyLastMatch] = useState(null);
   const [recentMatches, setRecentMatches] = useState([]);
   const playersRef = useRef(players);
-  playersRef.current = players;
+  useEffect(() => { playersRef.current = players; }, [players]);
 
   const fetchHomeMatches = useCallback(async () => {
     if (!player?.id) return;
@@ -40,8 +40,9 @@ export default function Home() {
       .order("played_at", { ascending: false })
       .limit(5);
     setRecentMatches(recent ?? []);
-  }, [player?.id]);
+  }, [player]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on deps change
   useEffect(() => { fetchHomeMatches(); }, [fetchHomeMatches]);
 
   function onMatchAction() {

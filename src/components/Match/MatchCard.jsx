@@ -1,13 +1,6 @@
 import { format, parseISO } from "date-fns";
 import clsx from "clsx";
 
-function formatSets(sets, isPlayerA) {
-  if (!Array.isArray(sets)) return "—";
-  return sets
-    .map((s) => (isPlayerA ? `${s.me}-${s.opp}` : `${s.opp}-${s.me}`))
-    .join("  ");
-}
-
 export default function MatchCard({ match, playerId }) {
   const isPlayerA = match.player_a_id === playerId;
   const opponent = isPlayerA ? match.player_b : match.player_a;

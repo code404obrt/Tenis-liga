@@ -71,9 +71,8 @@ export function useLeaderboard(seasonId) {
     setLoading(false);
   }, [seasonId]);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on deps change
+  useEffect(() => { fetch(); }, [fetch]);
 
   return { rows, loading };
 }

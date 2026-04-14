@@ -50,9 +50,8 @@ export function usePlayers() {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on deps change
+  useEffect(() => { fetch(); }, [fetch]);
 
   return { players, loading, refetch: fetch };
 }

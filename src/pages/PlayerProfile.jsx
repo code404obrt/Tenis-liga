@@ -4,7 +4,6 @@ import { usePlayers } from "../hooks/usePlayers";
 import { usePlayerMatches, useHeadToHead } from "../hooks/usePlayerProfile";
 import Card from "../components/Common/Card";
 import MatchCard from "../components/Match/MatchCard";
-import clsx from "clsx";
 
 export default function PlayerProfilePage() {
   const player = useAuthStore((s) => s.player);

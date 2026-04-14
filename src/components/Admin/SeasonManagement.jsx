@@ -21,6 +21,7 @@ export default function SeasonManagement() {
     setLoading(false);
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on mount
   useEffect(() => { fetchSeasons(); }, []);
 
   async function handleCreate(e) {

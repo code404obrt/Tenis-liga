@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LeaderboardFull from "../components/Leaderboard/LeaderboardFull";
 import { useSeasons } from "../hooks/useLeaderboard";
 
@@ -6,12 +6,8 @@ export default function LeaderboardPage() {
   const { seasons, activeSeason, loading } = useSeasons();
   const [selectedSeasonId, setSelectedSeasonId] = useState(null);
 
-  // Default to active season once loaded
-  useEffect(() => {
-    if (activeSeason && !selectedSeasonId) {
-      setSelectedSeasonId(activeSeason.id);
-    }
-  }, [activeSeason, selectedSeasonId]);
+  // Use selected season, falling back to active season
+  const effectiveSeasonId = selectedSeasonId ?? activeSeason?.id ?? null;
 
   return (
     <div className="space-y-4">
@@ -21,7 +17,7 @@ export default function LeaderboardPage() {
         {/* Season selector */}
         {seasons.length > 1 && (
           <select
-            value={selectedSeasonId ?? ""}
+            value={effectiveSeasonId ?? ""}
             onChange={(e) => setSelectedSeasonId(e.target.value)}
             className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white"
           >
@@ -39,10 +35,10 @@ export default function LeaderboardPage() {
         )}
       </div>
 
-      {loading || !selectedSeasonId ? (
+      {loading || !effectiveSeasonId ? (
         <p className="text-sm text-gray-400 text-center py-4">Loading…</p>
       ) : (
-        <LeaderboardFull seasonId={selectedSeasonId} />
+        <LeaderboardFull seasonId={effectiveSeasonId} />
       )}
     </div>
   );

@@ -18,6 +18,7 @@ export default function MatchManagement() {
     setLoading(false);
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on mount
   useEffect(() => { fetchMatches(); }, []);
 
   async function handleVoid(id) {

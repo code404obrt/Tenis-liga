@@ -22,9 +22,8 @@ export function usePendingMatches(playerId) {
       });
   }, [playerId]);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- async fetch on deps change
+  useEffect(() => { fetch(); }, [fetch]);
 
   return { matches, loading, refetch: fetch };
 }

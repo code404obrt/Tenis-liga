@@ -3,11 +3,6 @@ import { format, parseISO } from "date-fns";
 import { confirmMatch, rejectMatch } from "../../hooks/useMatches";
 import Button from "../Common/Button";
 
-function formatSets(sets) {
-  if (!Array.isArray(sets)) return "—";
-  return sets.map((s) => `${s.me}-${s.opp}`).join(", ");
-}
-
 export default function PendingConfirmationCard({ match, onAction }) {
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState("");
