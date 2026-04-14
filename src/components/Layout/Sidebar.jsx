@@ -8,7 +8,6 @@ const links = [
   { to: "/", label: "Home" },
   { to: "/leaderboard", label: "Leaderboard" },
   { to: "/profile", label: "My Profile" },
-  { to: "/history", label: "History" },
 ];
 
 export default function Sidebar() {

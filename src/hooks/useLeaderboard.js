@@ -27,7 +27,7 @@ export function useLeaderboard(seasonId) {
   const [loading, setLoading] = useState(true);
 
   const fetch = useCallback(async () => {
-    if (!seasonId) return;
+    if (!seasonId) { setLoading(false); return; }
     setLoading(true);
 
     // All active players

@@ -14,10 +14,11 @@ Deno.serve(async (req) => {
   try {
     const payload = await req.json();
     const match = payload.record;
+    const oldMatch = payload.old_record;
 
-    // Only act when a match transitions to 'confirmed'
-    if (match.status !== "confirmed") {
-      return new Response("Not a confirmation event", { status: 200 });
+    // Only act on actual transition to 'confirmed' (not re-updates of already confirmed rows)
+    if (match.status !== "confirmed" || oldMatch?.status === "confirmed") {
+      return new Response("Not a confirmation transition", { status: 200 });
     }
 
     const supabase = createClient(
