@@ -24,9 +24,10 @@ export function usePlayerMatches(playerId) {
   return { matches, loading };
 }
 
-// Head-to-head record between two players
+// Head-to-head record + individual matches between two players
 export function useHeadToHead(playerId, opponentId) {
   const [record, setRecord] = useState({ wins: 0, losses: 0 });
+  const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,11 +35,12 @@ export function useHeadToHead(playerId, opponentId) {
 
     supabase
       .from("matches")
-      .select("player_a_id, sets_won_a, sets_won_b")
+      .select("*, player_a:player_a_id(id, name), player_b:player_b_id(id, name)")
       .or(
         `and(player_a_id.eq.${playerId},player_b_id.eq.${opponentId}),and(player_a_id.eq.${opponentId},player_b_id.eq.${playerId})`
       )
       .eq("status", "confirmed")
+      .order("played_at", { ascending: false })
       .then(({ data }) => {
         let wins = 0;
         let losses = 0;
@@ -49,9 +51,10 @@ export function useHeadToHead(playerId, opponentId) {
           else losses++;
         }
         setRecord({ wins, losses });
+        setMatches(data ?? []);
         setLoading(false);
       });
   }, [playerId, opponentId]);
 
-  return { record, loading };
+  return { record, matches, loading };
 }

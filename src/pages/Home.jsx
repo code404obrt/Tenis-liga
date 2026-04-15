@@ -5,6 +5,7 @@ import Button from "../components/Common/Button";
 import LeaderboardPreview from "../components/Leaderboard/LeaderboardPreview";
 import PendingConfirmationCard from "../components/Match/PendingConfirmationCard";
 import MatchCard from "../components/Match/MatchCard";
+import MatchFeedCard from "../components/Match/MatchFeedCard";
 import { useAuthStore } from "../store/authStore";
 import { usePlayers } from "../hooks/usePlayers";
 import { usePendingMatches } from "../hooks/usePendingMatches";
@@ -118,7 +119,7 @@ export default function Home() {
         <h3 className="font-semibold text-tennis-dark mb-2">Recent matches</h3>
         {recentMatches.length > 0 ? (
           recentMatches.map((m) => (
-            <MatchCard key={m.id} match={m} playerId={player?.id} />
+            <MatchFeedCard key={m.id} match={m} />
           ))
         ) : (
           <p className="text-sm text-gray-400">No matches yet</p>

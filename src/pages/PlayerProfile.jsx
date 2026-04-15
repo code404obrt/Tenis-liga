@@ -4,6 +4,8 @@ import { usePlayers } from "../hooks/usePlayers";
 import { usePlayerMatches, useHeadToHead } from "../hooks/usePlayerProfile";
 import Card from "../components/Common/Card";
 import MatchCard from "../components/Match/MatchCard";
+import { format, parseISO } from "date-fns";
+import clsx from "clsx";
 
 export default function PlayerProfilePage() {
   const player = useAuthStore((s) => s.player);
@@ -98,27 +100,56 @@ function Stat({ label, value }) {
 }
 
 function HeadToHeadRecord({ playerId, opponentId, opponents }) {
-  const { record, loading } = useHeadToHead(playerId, opponentId);
+  const { record, matches, loading } = useHeadToHead(playerId, opponentId);
   const opponent = opponents.find((p) => p.id === opponentId);
   const total = record.wins + record.losses;
 
   if (loading) return <p className="text-sm text-gray-400">Loading…</p>;
 
   return (
-    <div className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
-      <div className="text-center">
-        <p className="text-2xl font-bold text-tennis-dark">{record.wins}</p>
-        <p className="text-xs text-gray-500">You</p>
+    <div className="space-y-3">
+      {/* Score summary */}
+      <div className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3">
+        <div className="text-center">
+          <p className="text-2xl font-bold text-tennis-dark">{record.wins}</p>
+          <p className="text-xs text-gray-500">You</p>
+        </div>
+        <div className="text-center">
+          <p className="text-sm text-gray-400">
+            {total === 0 ? "No matches" : `${total} match${total !== 1 ? "es" : ""}`}
+          </p>
+        </div>
+        <div className="text-center">
+          <p className="text-2xl font-bold text-gray-400">{record.losses}</p>
+          <p className="text-xs text-gray-500">{opponent?.name ?? "—"}</p>
+        </div>
       </div>
-      <div className="text-center">
-        <p className="text-sm text-gray-400">
-          {total === 0 ? "No matches" : `${total} match${total !== 1 ? "es" : ""}`}
-        </p>
-      </div>
-      <div className="text-center">
-        <p className="text-2xl font-bold text-gray-400">{record.losses}</p>
-        <p className="text-xs text-gray-500">{opponent?.name ?? "—"}</p>
-      </div>
+
+      {/* Match list */}
+      {matches.map((m) => {
+        const iAmA = m.player_a_id === playerId;
+        const sets = Array.isArray(m.sets) ? m.sets : [];
+        const setsWonMe = iAmA ? m.sets_won_a : m.sets_won_b;
+        const setsWonOpp = iAmA ? m.sets_won_b : m.sets_won_a;
+        const won = setsWonMe > setsWonOpp;
+        const scoreStr = sets.map((s) => (iAmA ? `${s.me}-${s.opp}` : `${s.opp}-${s.me}`)).join("  ");
+        const playedAt = m.played_at ? format(parseISO(m.played_at), "d MMM yyyy") : "—";
+
+        return (
+          <div key={m.id} className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={clsx(
+                "text-xs font-semibold px-2 py-0.5 rounded-full shrink-0",
+                won ? "bg-tennis-light/15 text-tennis-dark" : "bg-red-50 text-red-500"
+              )}>
+                {won ? "W" : "L"}
+              </span>
+              <p className="text-xs text-gray-400">{playedAt} · {m.surface}</p>
+            </div>
+            <span className="text-sm font-mono text-gray-600 shrink-0">{scoreStr}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }

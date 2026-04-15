@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recent Matches Mockup 1 - Simple Winner Emphasis</title>
+    <style>
+      :root {
+        --bg: #f1f1f1;
+        --card: #ececec;
+        --line: #d7d7d7;
+        --text: #1e2430;
+        --muted: #8a93a2;
+        --winner: #2b5f13;
+        --winner-soft: #e5f1dc;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .wrap {
+        width: min(760px, 100%);
+        margin: 0 auto;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid #dedede;
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+      .title {
+        margin: 0 0 12px;
+        color: #2a5916;
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+
+      .match {
+        padding: 14px 0;
+        border-top: 1px solid transparent;
+      }
+
+      .match + .match {
+        border-top-color: var(--line);
+      }
+
+      .top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .winner-line {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .winner-name {
+        color: var(--winner);
+      }
+
+      .sets-summary {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .set-chip {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1f4f0a;
+        background: var(--winner-soft);
+        border: 1px solid #c7dcb7;
+        border-radius: 999px;
+        padding: 4px 10px;
+      }
+
+      .final {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #4d5767;
+        white-space: nowrap;
+      }
+
+      .meta {
+        margin-top: 8px;
+        font-size: 1rem;
+        color: var(--muted);
+      }
+
+      @media (max-width: 760px) {
+        .title { font-size: 1.5rem; }
+        .winner-line { font-size: 1.3rem; }
+        .set-chip { font-size: 0.9rem; }
+        .meta { font-size: 0.9rem; }
+        .final { font-size: 1.15rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="card">
+        <h1 class="title">Recent matches</h1>
+
+        <article class="match">
+          <div class="top">
+            <div class="winner-line"><span class="winner-name">Nikola</span> def. Duje</div>
+            <div class="final">2-0</div>
+          </div>
+          <div class="sets-summary">
+            <span class="set-chip">Won S1 6-3</span>
+            <span class="set-chip">Won S2 6-2</span>
+          </div>
+          <div class="meta">5 Apr 2026 - Grass - Znjan</div>
+        </article>
+
+        <article class="match">
+          <div class="top">
+            <div class="winner-line"><span class="winner-name">Duje</span> def. Slavko</div>
+            <div class="final">2-1</div>
+          </div>
+          <div class="sets-summary">
+            <span class="set-chip">Won S2 6-4</span>
+            <span class="set-chip">Won S3 7-5</span>
+          </div>
+          <div class="meta">2 Apr 2026 - Hard - Firule</div>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>
