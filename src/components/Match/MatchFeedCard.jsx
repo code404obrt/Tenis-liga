@@ -28,7 +28,7 @@ export default function MatchFeedCard({ match, playerId }) {
         </span>
         <div className="flex shrink-0">
           {winnerSets.map((score, i) => (
-            <span key={i} className="w-7 text-center text-sm font-bold text-foreground font-mono">
+            <span key={i} className="w-7 text-center text-sm font-bold text-primary font-mono">
               {score}
             </span>
           ))}
@@ -45,7 +45,7 @@ export default function MatchFeedCard({ match, playerId }) {
         </span>
         <div className="flex shrink-0">
           {loserSets.map((score, i) => (
-            <span key={i} className="w-7 text-center text-sm text-muted font-mono">
+            <span key={i} className="w-7 text-center text-sm text-muted-foreground font-mono">
               {score}
             </span>
           ))}
