@@ -10,9 +10,10 @@ export default function Button({
   const base =
     "inline-flex items-center justify-center font-medium rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed";
   const variants = {
-    primary: "bg-tennis-dark text-white hover:bg-tennis-light",
-    secondary: "bg-white text-tennis-dark border border-tennis-dark hover:bg-tennis-bg",
-    ghost: "bg-transparent text-tennis-dark hover:bg-tennis-bg",
+    primary: "bg-primary text-primary-foreground hover:bg-accent shadow-glow",
+    secondary: "bg-secondary text-secondary-foreground border border-border hover:bg-muted",
+    ghost: "bg-transparent text-foreground hover:bg-secondary",
+    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
   };
   const sizes = {
     sm: "px-3 py-1.5 text-sm",

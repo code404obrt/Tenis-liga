@@ -5,10 +5,10 @@ import Sidebar from "./Sidebar";
 // around the current page outlet.
 export default function Navigation({ children }) {
   return (
-    <div className="min-h-screen bg-tennis-bg">
+    <div className="min-h-screen bg-background">
       <Header />
       <Sidebar />
-      <main className="max-w-xl mx-auto px-4 py-4">{children}</main>
+      <main className="container mx-auto px-4 py-6">{children}</main>
     </div>
   );
 }

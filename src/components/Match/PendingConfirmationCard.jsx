@@ -14,7 +14,6 @@ export default function PendingConfirmationCard({ match, onAction }) {
     ? format(parseISO(match.played_at), "d MMM yyyy")
     : "—";
 
-  // From opponent's (player_b) perspective, swap me/opp labels
   const sets = Array.isArray(match.sets)
     ? match.sets.map((s) => ({ me: s.opp, opp: s.me, tiebreak: s.tiebreak }))
     : [];
@@ -38,22 +37,22 @@ export default function PendingConfirmationCard({ match, onAction }) {
   }
 
   return (
-    <div className="rounded-2xl bg-tennis-light/10 border border-tennis-light p-4 space-y-3">
+    <div className="rounded-xl bg-primary/10 border border-primary/30 p-4 space-y-3">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-tennis-dark font-medium uppercase tracking-wide">
+          <p className="text-xs text-primary font-medium uppercase tracking-wide">
             Pending confirmation
           </p>
-          <p className="text-sm text-gray-700 mt-0.5">
+          <p className="text-sm text-foreground mt-0.5">
             <span className="font-semibold">{submitterName}</span> submitted a result
           </p>
         </div>
-        <span className="text-xs text-gray-400">{playedAt}</span>
+        <span className="text-xs text-muted-foreground">{playedAt}</span>
       </div>
 
       {/* Score display */}
-      <div className="bg-white rounded-xl px-4 py-3">
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+      <div className="bg-secondary rounded-xl px-4 py-3">
+        <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
           <span>Player</span>
           <div className="flex gap-4">
             {sets.map((_, i) => (
@@ -62,29 +61,18 @@ export default function PendingConfirmationCard({ match, onAction }) {
             <span className="w-6 text-center">W</span>
           </div>
         </div>
-        <ScoreRow
-          name="You"
-          sets={sets}
-          field="me"
-          setsWon={match.sets_won_b}
-          isMe
-        />
-        <ScoreRow
-          name={submitterName}
-          sets={sets}
-          field="opp"
-          setsWon={match.sets_won_a}
-        />
+        <ScoreRow name="You" sets={sets} field="me" setsWon={match.sets_won_b} isMe />
+        <ScoreRow name={submitterName} sets={sets} field="opp" setsWon={match.sets_won_a} />
       </div>
 
-      <p className="text-xs text-gray-500">
-        Surface: <span className="font-medium">{match.surface}</span>
+      <p className="text-xs text-muted-foreground">
+        Surface: <span className="font-medium text-foreground">{match.surface}</span>
         {match.location && (
-          <> · Location: <span className="font-medium">{match.location}</span></>
+          <> · Location: <span className="font-medium text-foreground">{match.location}</span></>
         )}
       </p>
 
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
 
       {rejecting ? (
         <div className="space-y-2">
@@ -92,46 +80,24 @@ export default function PendingConfirmationCard({ match, onAction }) {
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Reason for rejection (optional)"
-            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm resize-none"
+            className="w-full border border-border bg-secondary text-foreground rounded-xl px-3 py-2 text-sm resize-none placeholder:text-muted-foreground"
             rows={2}
           />
           <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="flex-1"
-              onClick={() => setRejecting(false)}
-              disabled={loading}
-            >
+            <Button variant="secondary" size="sm" className="flex-1" onClick={() => setRejecting(false)} disabled={loading}>
               Cancel
             </Button>
-            <Button
-              size="sm"
-              className="flex-1 bg-red-600 hover:bg-red-700"
-              onClick={handleReject}
-              disabled={loading}
-            >
+            <Button variant="destructive" size="sm" className="flex-1" onClick={handleReject} disabled={loading}>
               {loading ? "Rejecting…" : "Confirm rejection"}
             </Button>
           </div>
         </div>
       ) : (
         <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
-            onClick={() => setRejecting(true)}
-            disabled={loading}
-          >
+          <Button variant="destructive" size="sm" className="flex-1 bg-destructive/10 text-destructive hover:bg-destructive/20 shadow-none" onClick={() => setRejecting(true)} disabled={loading}>
             Reject
           </Button>
-          <Button
-            size="sm"
-            className="flex-1"
-            onClick={handleConfirm}
-            disabled={loading}
-          >
+          <Button size="sm" className="flex-1" onClick={handleConfirm} disabled={loading}>
             {loading ? "Confirming…" : "Confirm result"}
           </Button>
         </div>
@@ -143,22 +109,20 @@ export default function PendingConfirmationCard({ match, onAction }) {
 function ScoreRow({ name, sets, field, setsWon, isMe }) {
   return (
     <div className="flex items-center justify-between text-sm py-1">
-      <span className={isMe ? "font-semibold text-tennis-dark" : "text-gray-700"}>
+      <span className={isMe ? "font-semibold text-primary" : "text-foreground"}>
         {name}
       </span>
       <div className="flex gap-4">
         {sets.map((s, i) => (
-          <span key={i} className="w-6 text-center font-mono">
+          <span key={i} className="w-6 text-center font-mono text-foreground">
             {s[field]}
           </span>
         ))}
-        <span
-          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-            setsWon > (field === "me" ? sets.length - setsWon : setsWon)
-              ? "bg-tennis-dark text-white"
-              : "bg-gray-100 text-gray-400"
-          }`}
-        >
+        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+          setsWon > (field === "me" ? sets.length - setsWon : setsWon)
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-muted-foreground"
+        }`}>
           {setsWon ?? "—"}
         </span>
       </div>

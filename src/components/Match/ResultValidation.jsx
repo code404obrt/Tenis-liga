@@ -23,14 +23,10 @@ function Row({ label, state }) {
   const isError = state === "error";
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span
-        className={
-          isOk ? "text-tennis-light" : isError ? "text-red-400" : "text-gray-400"
-        }
-      >
+      <span className={isOk ? "text-success" : isError ? "text-destructive" : "text-muted-foreground"}>
         {isOk ? <Check size={18} /> : isError ? <X size={18} /> : <Clock size={18} />}
       </span>
-      <span className={isOk ? "text-gray-900" : isError ? "text-red-500" : "text-gray-500"}>
+      <span className={isOk ? "text-foreground" : isError ? "text-destructive" : "text-muted-foreground"}>
         {label}
       </span>
     </div>

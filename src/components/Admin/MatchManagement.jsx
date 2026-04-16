@@ -23,10 +23,7 @@ export default function MatchManagement() {
 
   async function handleVoid(id) {
     setError(null);
-    const { error: err } = await supabase
-      .from("matches")
-      .update({ status: "voided" })
-      .eq("id", id);
+    const { error: err } = await supabase.from("matches").update({ status: "voided" }).eq("id", id);
     if (err) setError(err.message);
     else fetchMatches();
   }
@@ -40,56 +37,61 @@ export default function MatchManagement() {
   }
 
   const statusColor = {
-    pending: "text-amber-500",
-    confirmed: "text-tennis-light",
-    disputed: "text-red-500",
-    voided: "text-gray-400",
+    pending: "text-amber-400",
+    confirmed: "text-success",
+    disputed: "text-destructive",
+    voided: "text-muted-foreground",
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 space-y-3">
-      <h3 className="font-semibold text-tennis-dark">Matches</h3>
-      {error && <p className="text-xs text-red-500">{error}</p>}
+    <div className="bg-card rounded-xl border border-border shadow-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-border bg-gradient-card">
+        <h3 className="font-display text-2xl">Matches</h3>
+      </div>
 
-      {loading ? (
-        <p className="text-sm text-gray-400">Loading…</p>
-      ) : matches.length === 0 ? (
-        <p className="text-sm text-gray-400">No matches yet</p>
-      ) : (
-        <div className="space-y-0">
-          {matches.map((m) => (
-            <div key={m.id} className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0 gap-2">
-              <div className="min-w-0">
-                <p className="text-sm font-medium truncate">
-                  {m.player_a?.name} vs {m.player_b?.name}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {m.played_at ? format(parseISO(m.played_at), "d MMM yyyy") : "—"} · {m.surface}
-                  {" · "}
-                  <span className={statusColor[m.status] ?? "text-gray-400"}>
-                    {m.status}
-                  </span>
-                </p>
-              </div>
-              <div className="flex gap-1.5 shrink-0">
-                {m.status !== "voided" && (
-                  <Button size="sm" variant="secondary" onClick={() => handleVoid(m.id)}>
-                    Void
+      <div className="p-4 space-y-3">
+        {error && <p className="text-xs text-destructive">{error}</p>}
+
+        {loading ? (
+          <div className="flex items-center justify-center py-4">
+            <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : matches.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No matches yet</p>
+        ) : (
+          <div>
+            {matches.map((m) => (
+              <div key={m.id} className="flex items-center justify-between py-2.5 border-b border-border last:border-0 gap-2">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {m.player_a?.name} vs {m.player_b?.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {m.played_at ? format(parseISO(m.played_at), "d MMM yyyy") : "—"} · {m.surface}
+                    {" · "}
+                    <span className={statusColor[m.status] ?? "text-muted-foreground"}>
+                      {m.status}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex gap-1.5 shrink-0">
+                  {m.status !== "voided" && (
+                    <Button size="sm" variant="secondary" onClick={() => handleVoid(m.id)}>Void</Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="bg-destructive/10 text-destructive hover:bg-destructive/20 shadow-none"
+                    onClick={() => handleDelete(m.id)}
+                  >
+                    Delete
                   </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="border-red-200 text-red-500 hover:bg-red-50"
-                  onClick={() => handleDelete(m.id)}
-                >
-                  Delete
-                </Button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
