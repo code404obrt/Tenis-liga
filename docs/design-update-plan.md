@@ -8,26 +8,44 @@ features, pages, logic, and data flows** unchanged.
 
 Think of it as: **our app's skeleton + Lovable's clothes.**
 
-## Scope
+## Scope — Option A: visual language + layout patterns
 
-### In scope (visual / styling only)
-- Tailwind color palette & theme tokens
-- Typography (add Bebas Neue for headings)
+We adopt Lovable's **visual design system** AND its **layout language** (spacing, grid
+patterns, header style, animations), while keeping our app's **feature structure**
+(6 pages, sidebar nav, dedicated New Match page, Admin panel).
+
+### In scope
+
+**Visual styling:**
+- Tailwind color palette & theme tokens (dark theme with yellow-green primary)
+- Typography (Bebas Neue for headings, Inter for body)
 - Card surfaces (dark, rounded, glow, gradients)
 - Buttons, inputs, badges — restyled to new tokens
 - Leaderboard rank icons (Trophy / Medal for top 3)
 - W/L color treatment (success-green / destructive-red)
 - ELO flash animations retuned for dark background
 
-### Out of scope (explicitly NOT changing)
+**Layout patterns adopted from Lovable:**
+- Sticky translucent header (`bg-background/80 backdrop-blur-lg`)
+- Logo treatment: Trophy icon in rounded-lg primary-tint box + gradient text
+- Page container pattern: `container mx-auto px-4 py-8`
+- Responsive grid proportions (e.g. PlayerProfile: `lg:grid-cols-2` for head-to-head + history)
+- Card paddings (`p-4` / `p-6`), border-radius (`rounded-xl`), spacing (`gap-8`)
+- Entrance animations: `animate-slide-up` with staggered delays
+- Loading spinner pattern (primary-colored ring)
+
+### Out of scope — explicitly NOT changing
+
 - App logic, features, pages, routes
 - Database schema, RLS, Edge Functions
 - State management (Zustand stores)
 - Authentication flow
-- Match submission / confirmation / dispute flows
+- Match submission / confirmation / dispute flows (NewMatch stays a page, not a dialog)
 - ELO calculation
 - Admin panel functionality
-- Component structure — only `className`s change, not JSX structure
+- Sidebar navigation (kept — we have 6 pages, Lovable's header-only nav doesn't scale)
+- Home hero card (kept — shows "you" context; Lovable doesn't have this)
+- Individual page restructures may be revisited later per-page if needed
 
 ## Reference Design System (from Lovable app)
 
@@ -79,7 +97,7 @@ Think of it as: **our app's skeleton + Lovable's clothes.**
 
 ## Phased Implementation
 
-### Phase 1 — Foundation (config + theme tokens)
+### Phase 1 — Foundation (config + theme tokens) ✅ DONE
 **Files:**
 - `tennis-league-app/tailwind.config.js`
 - `tennis-league-app/src/index.css`
@@ -98,41 +116,71 @@ Think of it as: **our app's skeleton + Lovable's clothes.**
    - Add utility classes: `.text-gradient`, `.bg-gradient-*`, `.shadow-glow`, `.shadow-card`, animation utilities.
    - Update scrollbar styling for dark theme.
 
-**Test:** `npm run dev` — confirm dark theme loads, fonts render, primary color shows as yellow-green. (UI will look broken — that's expected until Phase 2.)
+Verified: build clean, fonts render, tokens available.
+Committed on `design-update` (commit `8cb6791`).
 
 ---
 
-### Phase 2 — Component restyle
-**Files (probable):**
-- `src/components/Header.jsx`
-- `src/components/Leaderboard.jsx` (or equivalent)
-- `src/components/MatchHistory.jsx`
-- `src/components/PendingMatches.jsx`
-- `src/pages/Home.jsx`
-- `src/pages/NewMatch.jsx`
-- `src/pages/PlayerProfile.jsx`
-- `src/pages/Admin.jsx`
-- All shared UI components (buttons, cards, inputs)
+### Phase 2 — Component restyle (cluster-by-cluster, pause-for-review)
 
-**Changes per component:**
-- Replace `bg-tennis-dark|light|bg` → new semantic tokens (`bg-card`, `bg-background`, `bg-primary`, etc.)
-- Apply `font-display` to headings.
-- Add rounded corners (`rounded-xl`), borders (`border-border`), shadow (`shadow-card`).
+Executed one cluster at a time, each ending at a review checkpoint before the next.
+
+**Universal changes per component:**
+- Replace `bg-tennis-dark|light|bg` → semantic tokens (`bg-card`, `bg-background`, `bg-primary`).
+- Headings → `font-display` (Bebas Neue).
+- Card wrappers → `bg-card rounded-xl border border-border shadow-card`.
 - Wins → `text-success`, losses → `text-destructive`.
-- Add Trophy/Medal icons on top-3 leaderboard rows.
-- Primary CTA buttons: `shadow-glow` or `bg-gradient-primary`.
-- Hover states: `hover:bg-secondary/50`, `hover:text-primary`.
+- Primary CTA buttons → `bg-primary text-primary-foreground shadow-glow` or `bg-gradient-primary`.
+- Hover states → `hover:bg-secondary/50`, `hover:text-primary`.
+- Entrance animations → `animate-slide-up` with staggered delays on page content.
 
-**Test after each component:** navigate to its page, check visual result, verify all existing functionality still works.
+**Clusters:**
+
+#### 2a — App shell (Navigation, Header, Sidebar)
+- Navigation wrapper: `bg-tennis-bg` → `bg-background`.
+- Header: adopt Lovable's sticky translucent style (`sticky top-0 bg-background/80 backdrop-blur-lg border-b border-border`), Trophy-icon-in-primary-tint logo, `text-gradient` title, user chip in `bg-secondary`.
+- Sidebar: dark surface, `bg-card`, active link uses `bg-primary/10 text-primary`.
+
+#### 2b — Shared UI primitives (Button, Card, Modal)
+- Button: primary/secondary/ghost variants restyled to new tokens.
+- Card: `bg-card rounded-xl border border-border shadow-card`.
+- Modal: dark backdrop, dark panel.
+
+#### 2c — Home page
+- Container pattern `container mx-auto px-4 py-8`.
+- Hero card (me) — keep existing structure, restyle with dark+glow.
+- Leaderboard preview — top-3 Trophy/Medal icons, W/L green/red.
+- Last match + recent matches — dark cards.
+- Slide-up stagger on sections.
+
+#### 2d — Leaderboard full page
+- Dark table rows, rank icons, season selector in `bg-secondary`.
+
+#### 2e — New Match page
+- Dark form, scoreboard dark surface, progressive unlock badges in primary.
+- Surface pill selector with primary-tinted active state.
+
+#### 2f — Player Profile page
+- Hero stats card dark+glow, Bebas Neue on stat numbers.
+- Head-to-head + match history in `lg:grid-cols-2`.
+- Staggered slide-up animations.
+
+#### 2g — Admin panel
+- Dark tabs, dark management cards.
+- Destructive buttons use `bg-destructive`.
+
+#### 2h — Login page
+- Dark page bg, dark card, primary-tinted submit button.
 
 ---
 
 ### Phase 3 — Polish & cleanup
 1. Retune ELO flash animations for dark bg (green/red glow intensities).
 2. Full click-through: every route, every interaction — check contrast, readability, hover/focus states, mobile view.
-3. Update `CLAUDE.md` — refresh color palette info in tech stack section.
-4. Delete reference clone: `rm -rf /Users/borza/Obrt/tenis/lovable-tenis`.
-5. User reviews → merge PR `design-update` → `main`.
+3. Remove legacy `tennis-dark/light/bg` tokens from `tailwind.config.js` (now safe — all usages migrated).
+4. Update `CLAUDE.md` — refresh color palette info in tech stack section.
+5. Delete reference clone: `rm -rf /Users/borza/Obrt/tenis/lovable-tenis`.
+6. User reviews → merge PR `design-update` → `main`.
 
 ---
 
@@ -141,8 +189,11 @@ Think of it as: **our app's skeleton + Lovable's clothes.**
 - **Dark mode contrast:** some subtle text may become illegible against dark background. Needs manual verification per page.
 - **ELO flash colors:** current animations assume light bg. May need brightness adjustment.
 - **Bebas Neue is bold:** headings will look dramatically different. User has approved.
-- **Mobile-first preserved:** Lovable uses `container mx-auto` + responsive grids — same approach as our app, no layout churn expected.
+- **Mobile-first preserved:** Lovable uses `container mx-auto` + responsive grids — same approach as our app.
 - **`tennis-*` color class sweep:** `grep`/replace risk — must be done carefully per file, not globally (some files may use these inline in conditional classes).
+- **Sidebar kept:** intentional deviation from Lovable (which has no sidebar). Our 6 pages need it.
+- **NewMatch kept as page:** intentional — moving to a dialog is a functional change, not visual.
+- **Per-page layout revisions:** explicitly deferred. If a specific page layout feels wrong after Phase 2, we can revisit that page individually in a follow-up pass.
 
 ## Git Workflow
 
