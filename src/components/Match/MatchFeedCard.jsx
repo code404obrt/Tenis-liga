@@ -27,11 +27,14 @@ export default function MatchFeedCard({ match, playerId }) {
           )}
         </span>
         <div className="flex shrink-0">
-          {winnerSets.map((score, i) => (
-            <span key={i} className="w-7 text-center text-sm font-bold text-primary font-mono">
-              {score}
-            </span>
-          ))}
+          {winnerSets.map((score, i) => {
+            const wonThisSet = score > loserSets[i];
+            return (
+              <span key={i} className={`w-7 text-center text-sm font-bold font-mono ${wonThisSet ? "text-primary" : "text-muted-foreground"}`}>
+                {score}
+              </span>
+            );
+          })}
         </div>
       </div>
 
@@ -44,11 +47,14 @@ export default function MatchFeedCard({ match, playerId }) {
           )}
         </span>
         <div className="flex shrink-0">
-          {loserSets.map((score, i) => (
-            <span key={i} className="w-7 text-center text-sm text-muted-foreground font-mono">
-              {score}
-            </span>
-          ))}
+          {loserSets.map((score, i) => {
+            const wonThisSet = score > winnerSets[i];
+            return (
+              <span key={i} className={`w-7 text-center text-sm font-mono ${wonThisSet ? "text-primary font-bold" : "text-muted-foreground"}`}>
+                {score}
+              </span>
+            );
+          })}
         </div>
       </div>
 
