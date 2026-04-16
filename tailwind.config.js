@@ -21,12 +21,6 @@ export default {
         display: ["Bebas Neue", "sans-serif"],
       },
       colors: {
-        // Legacy tennis tokens kept temporarily for Phase-2 component migration.
-        // Remove once all usages are swapped to semantic tokens below.
-        "tennis-dark": "#27500A",
-        "tennis-light": "#639922",
-        "tennis-bg": "#F5F5F5",
-
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

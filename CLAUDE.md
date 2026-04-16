@@ -8,7 +8,7 @@ Full plan: `../tennis-league-app-plan.md`
 ## Tech Stack
 
 - **Frontend:** React + Vite
-- **Styling:** Tailwind CSS v3 — tennis green theme (`tennis-dark: #27500A`, `tennis-light: #639922`, `tennis-bg: #F5F5F5`)
+- **Styling:** Tailwind CSS v3 — dark theme with tennis-ball yellow-green primary (`--primary: hsl(68 100% 50%)`), navy-black background (`--background: hsl(220 20% 8%)`), Bebas Neue display font for headings, Inter for body. Semantic tokens via CSS variables in `src/index.css`.
 - **Backend:** Supabase (Postgres + Auth + Edge Functions)
 - **State:** Zustand (`authStore`, `matchStore`, `uiStore`)
 - **Router:** react-router-dom v6

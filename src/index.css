@@ -136,15 +136,15 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ELO flash animations — retuned for dark background in Phase 3 */
+/* ELO flash animations — tuned for dark background */
 @keyframes flash-win {
-  0%   { box-shadow: 0 0 0 3px rgba(99, 153, 34, 0.7); background-color: rgba(99, 153, 34, 0.15); }
-  100% { box-shadow: 0 0 0 0px rgba(99, 153, 34, 0); background-color: transparent; }
+  0%   { box-shadow: 0 0 0 3px hsl(68 100% 50% / 0.7), 0 0 20px hsl(68 100% 50% / 0.3); background-color: hsl(68 100% 50% / 0.15); }
+  100% { box-shadow: 0 0 0 0px hsl(68 100% 50% / 0), 0 0 0px hsl(68 100% 50% / 0); background-color: transparent; }
 }
 
 @keyframes flash-loss {
-  0%   { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5); background-color: rgba(220, 38, 38, 0.08); }
-  100% { box-shadow: 0 0 0 0px rgba(220, 38, 38, 0); background-color: transparent; }
+  0%   { box-shadow: 0 0 0 3px hsl(0 72% 51% / 0.6), 0 0 20px hsl(0 72% 51% / 0.25); background-color: hsl(0 72% 51% / 0.12); }
+  100% { box-shadow: 0 0 0 0px hsl(0 72% 51% / 0), 0 0 0px hsl(0 72% 51% / 0); background-color: transparent; }
 }
 
 .flash-win  { animation: flash-win  1.2s ease-out forwards; }
